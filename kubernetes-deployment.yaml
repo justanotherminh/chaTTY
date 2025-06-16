@@ -15,7 +15,6 @@ spec:
       containers:
       - name: websocket-app
         image: localhost:32000/chatty:0.0-202506161615
-        imagePullPolicy: Never
         ports:
         - containerPort: 8000
 ---
@@ -27,6 +26,8 @@ spec:
   selector:
     app: websocket-app
   ports:
-  - port: 8000
+  - protocol: TCP
+    port: 8000
     targetPort: 8000
+    nodePort: 30002
   type: NodePort
