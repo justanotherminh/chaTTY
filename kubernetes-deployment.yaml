@@ -2,10 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: websocket-app
-  labels:
-    app: websocket-app
 spec:
-  replicas: 1  # Note: WebSocket apps with in-memory state should use 1 replica
+  replicas: 1
   selector:
     matchLabels:
       app: websocket-app
@@ -16,28 +14,10 @@ spec:
     spec:
       containers:
       - name: websocket-app
-        image: websocket-app:latest  # Replace with your registry URL
+        image: localhost:32000/chatty:0.0-202506161615
+        imagePullPolicy: Never
         ports:
         - containerPort: 8000
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8000
-          initialDelaySeconds: 30
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8000
-          initialDelaySeconds: 5
-          periodSeconds: 5
 ---
 apiVersion: v1
 kind: Service
@@ -47,29 +27,6 @@ spec:
   selector:
     app: websocket-app
   ports:
-  - port: 80
+  - port: 8000
     targetPort: 8000
-    protocol: TCP
-  type: ClusterIP
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: websocket-app-ingress
-  annotations:
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/websocket-services: "websocket-app-service"
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: websocket-app.example.com  # Replace with your domain
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: websocket-app-service
-            port:
-              number: 80
+  type: NodePort
