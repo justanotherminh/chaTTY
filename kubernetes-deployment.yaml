@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: websocket-app
-        image: localhost:32000/chatty:0.0-202506161615
+        image: localhost:32000/chatty:0.0-202506161636
         ports:
         - containerPort: 8000
 ---

@@ -41,7 +41,7 @@ html_client = """
     <div id="messages"></div>
 
     <script>
-        const ws = new WebSocket("ws://localhost:8000/ws");
+        const ws = new WebSocket("/ws");
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('messageInput');
         const statusDiv = document.getElementById('status');
@@ -159,7 +159,6 @@ async def websocket_endpoint(websocket: WebSocket):
 if __name__ == "__main__":
     print("Starting WebSocket server...")
     print("Server will store messages in memory and serve them to new clients")
-    print("Visit http://localhost:8000 to test the client")
     print("Current messages in storage:", messages)
     
     uvicorn.run(app, host="0.0.0.0", port=8000)
